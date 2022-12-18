@@ -1,0 +1,98 @@
+{
+  "name": "charvis",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/charvis/src",
+  "prefix": "charvis",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/charvis",
+        "index": "apps/charvis/src/index.html",
+        "main": "apps/charvis/src/main.ts",
+        "polyfills": "apps/charvis/src/polyfills.ts",
+        "tsConfig": "apps/charvis/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": ["apps/charvis/src/favicon.ico", "apps/charvis/src/assets"],
+        "styles": [
+          "apps/charvis/src/styles.scss",
+          "libs/charvis/ui/src/lib/styles/variables.scss"
+        ],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/charvis/src/environments/environment.ts",
+              "with": "apps/charvis/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "charvis:build:production"
+        },
+        "development": {
+          "browserTarget": "charvis:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "proxyConfig": "apps/charvis/proxy.conf.json"
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "charvis:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/charvis/src/**/*.ts",
+          "apps/charvis/src/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/charvis"],
+      "options": {
+        "jestConfig": "apps/charvis/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

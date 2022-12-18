@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
-import { mergeDeep } from '@socket-template-app/utils';
-import { RoomConfig, UserOverview } from '@socket-template-app/api-interfaces';
+import { mergeDeep } from '@charvis/utils';
+import { RoomConfig, UserOverview } from '@charvis/api-interfaces';
 import { nanoid } from 'nanoid';
 import { Subject } from 'rxjs';
 import { User } from '../user/User';

@@ -1,17 +1,17 @@
 import { Logger } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, WsException, OnGatewayDisconnect, WsResponse, WebSocketServer, ConnectedSocket, OnGatewayConnection, MessageBody } from '@nestjs/websockets';
-import { ServerEvent, UserEvent, ServerJoined, HomeInfo, UserVoteKickMessage, UserJoinMessage, ServerSpectatorJoined, UserSpectatorJoinMessage } from '@socket-template-app/api-interfaces';
+import { ServerEvent, UserEvent, ServerJoined, HomeInfo, UserVoteKickMessage, UserJoinMessage, ServerSpectatorJoined, UserSpectatorJoinMessage } from '@charvis/api-interfaces';
 import { Server, Socket } from 'socket.io';
-import { environment } from '../../../../../apps/api/src/environments/environment';
 import { RoomService } from './room.service';
 import { InvalidConfigError, RoomFullError, RoomStartedError } from './room/errors';
 import { User } from './user/User';
 
+const clientUrl = 'http://localhost:4200';
 
 // @UseInterceptors(SentryInterceptor)
 @WebSocketGateway({
     cors: {
-        origin: environment.clientUrl,
+        origin: clientUrl,
         methods: ['GET', 'POST'],
         credentials: true
     }

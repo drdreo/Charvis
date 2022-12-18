@@ -1,5 +1,5 @@
 {
-  "npmScope": "socket-template-app",
+  "npmScope": "charvis",
   "affected": {
     "defaultBase": "master"
   },
@@ -18,7 +18,7 @@
     "packageManager": "npm",
     "defaultCollection": "@nrwl/angular"
   },
-  "defaultProject": "nx-socket-template",
+  "defaultProject": "charvis",
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],

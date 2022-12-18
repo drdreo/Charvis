@@ -1,5 +1,5 @@
 import { Controller, HttpStatus, Get, Param, HttpException } from '@nestjs/common';
-import { HomeInfo, RoomResponse } from '@socket-template-app/api-interfaces';
+import { HomeInfo, RoomResponse } from '@charvis/api-interfaces';
 import { RoomService } from './room.service';
 
 @Controller()

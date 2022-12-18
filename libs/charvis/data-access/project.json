@@ -1,0 +1,27 @@
+{
+  "name": "charvis-data-access",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/charvis/data-access/src",
+  "prefix": "charvis",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/libs/charvis/data-access"],
+      "options": {
+        "jestConfig": "libs/charvis/data-access/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/charvis/data-access/**/*.ts",
+          "libs/charvis/data-access/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": ["scope:client type:feature"]
+}

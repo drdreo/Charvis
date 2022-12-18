@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { SocketModule } from '@socket-template-app/api/socket';
+import { SocketModule } from '@charvis/api/socket';
 
 
 @Module({

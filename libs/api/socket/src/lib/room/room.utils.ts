@@ -1,4 +1,4 @@
-import { RoomConfig } from '@socket-template-app/api-interfaces';
+import { RoomConfig } from '@charvis/api-interfaces';
 
 
 export function validateConfig(config: RoomConfig): boolean {
