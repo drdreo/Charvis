@@ -15,7 +15,7 @@ const routes: Routes = [
     },
     {
         path: "space",
-        loadChildren: () => import("@charvis/space").then((m) => m.CharvisSpaceModule),
+        loadChildren: () => import("@charvis/space").then((m) => m.SpaceModule),
     }
 ];
 
