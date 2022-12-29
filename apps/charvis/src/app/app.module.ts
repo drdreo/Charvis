@@ -11,6 +11,11 @@ import { AppComponent } from "./app.component";
 const routes: Routes = [
     {
         path: "",
+        pathMatch: 'full',
+        redirectTo: '/space'
+    },
+    {
+        path: "home",
         loadChildren: () => import("@charvis/home").then((m) => m.HomeModule),
     },
     {

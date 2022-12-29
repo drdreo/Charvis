@@ -2,11 +2,18 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChil
 import { Vec3 } from "cannon-es";
 import CannonDebugger from 'cannon-es-debugger'
 import { Quaternion, Vector3 } from "three";
+import { CSS3DObject } from "three/examples/jsm/renderers/CSS3DRenderer";
+import { addHTML } from "./css-renderer.service";
+import { MarkdownService } from "./markdown.service";
 import { RendererService } from "./renderer.service";
 import { SimulationService } from "./simulation.service";
 
 
+import * as cssRend from './css-renderer.service';
+
 // https://github.com/pmndrs/drei
+
+// Table example: https://gist.github.com/Keith-Morris/9c4eebacf91617a822e2
 
 @Component({
     selector: "charvis-space",
@@ -16,12 +23,12 @@ import { SimulationService } from "./simulation.service";
 })
 export class SpaceComponent implements AfterViewInit {
 
+
     @ViewChild('spaceCanvas') private canvasRef: ElementRef;
     private cannonDebugger: any;
 
 
-    constructor(private renderer: RendererService, private simulation: SimulationService) {
-
+    constructor(private renderer: RendererService, private simulation: SimulationService, private markdown: MarkdownService) {
 
     }
 
@@ -30,6 +37,17 @@ export class SpaceComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
+       // this.startWEBGlRendering();
+
+        const markdownObject = this.markdown.html;
+
+
+        cssRend.init();
+        cssRend.animate();
+        cssRend.addHTML(markdownObject)
+    }
+
+    private startWEBGlRendering(){
         this.renderer.init({ canvas: this.canvas, width: this.canvas.clientWidth, height: this.canvas.clientHeight });
         this.simulation.init(); // creates dummy bodies
 

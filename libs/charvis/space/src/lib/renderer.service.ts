@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Object3D } from "three";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { BaseEvent, Event, EventDispatcher } from "three/src/core/EventDispatcher";
@@ -66,6 +67,10 @@ export class RendererService {
 
     addCube(id?: number): void {
         this.scene.add(this.createCube(id));
+    }
+
+    addObject(object: Object3D): void {
+        this.scene.add(object);
     }
 
     // filter out helper objects that are not in the simulation
