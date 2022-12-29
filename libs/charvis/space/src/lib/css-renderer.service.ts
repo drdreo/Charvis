@@ -7,7 +7,7 @@ import { CSS3DObject, CSS3DRenderer } from "three/examples/jsm/renderers/CSS3DRe
 import { Object3D } from "three/src/core/Object3D";
 
 // Tweening: https://www.npmjs.com/package/@tweenjs/tween.js#Installation
-
+// BETTER - https://github.com/lvlrSajjad/lvlrSajjad.github.io/blob/master/p-t-example/main.js
 var table = [
     "H", "Hydrogen", "1.00794", 1, 1,
     "He", "Helium", "4.002602", 18, 1,
