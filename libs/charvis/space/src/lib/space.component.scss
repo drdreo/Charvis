@@ -1,3 +1,5 @@
+$scale-factor: 1;
+
 .hud {
 	position: absolute;
 	top: 0;
@@ -7,10 +9,88 @@
 	overflow: hidden;
 }
 
-#space-canvas {
+.space-container {
 	position: absolute;
 	top: 0;
 	left: 0;
 	height: 100%;
 	width: 100%;
+}
+
+a {
+	color: #ffffff;
+}
+
+#menu {
+	position: absolute;
+	bottom: 20px;
+	width: 100%;
+	text-align: center;
+}
+
+.element {
+	width: 120px * $scale-factor;
+	height: 160px * $scale-factor;
+	box-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+	border: 1px * $scale-factor solid rgba(127, 255, 255, 0.25);
+	text-align: center;
+	cursor: default;
+
+	&:hover{
+		box-shadow: 0 0 12px rgba(0, 255, 255, 0.75);
+		border: 1px * $scale-factor solid rgba(127, 255, 255, 0.75);
+		backdrop-filter: blur(16px);
+	}
+
+	&.selected{
+		border: 1px * $scale-factor solid rgba(255, 127, 127, 0.75);
+		box-shadow: 0 0 12px rgba(255, 0, 0, 0.75);
+
+	}
+
+	.number {
+		position: absolute;
+		top: 20px * $scale-factor;
+		right: 20px * $scale-factor;
+		font-size: 12px * $scale-factor;
+		color: rgba(127, 255, 255, 0.75);
+	}
+
+	.symbol {
+		position: absolute;
+		top: 40px * $scale-factor;
+		left: 0;
+		right: 0;
+		font-size: 60px * $scale-factor;
+		font-weight: bold;
+		color: rgba(255, 255, 255, 0.75);
+		text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+	}
+
+	.details {
+		position: absolute;
+		bottom: 15px * $scale-factor;
+		left: 0;
+		right: 0;
+		font-size: 12px * $scale-factor;
+		color: rgba(127, 255, 255, 0.75);
+	}
+}
+
+button {
+	color: rgba(127, 255, 255, 0.75);
+	background: transparent;
+	outline: 1px solid rgba(127, 255, 255, 0.75);
+	border: 0;
+	padding: 5px * $scale-factor 10px * $scale-factor;
+	cursor: pointer;
+
+	&:hover {
+		background-color: rgba(0, 255, 255, 0.5);
+	}
+
+	&:active {
+		color: #000000;
+		background-color: rgba(0, 255, 255, 0.75);
+	}
 }

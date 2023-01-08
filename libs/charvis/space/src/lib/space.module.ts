@@ -1,9 +1,11 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
+import { CSSRendererService } from "./css-renderer.service";
 import { MarkdownService } from "./markdown.service";
-import { RendererService } from "./renderer.service";
-import { SimulationService } from "./simulation.service";
+import { RendererService } from "./simulation/renderer.service";
+import { SimulationService } from "./simulation/simulation.service";
+import { WebglWorldService } from "./simulation/webgl-world.service";
 import { SpaceComponent } from "./space.component";
 
 @NgModule({
@@ -13,7 +15,7 @@ import { SpaceComponent } from "./space.component";
             { path: "", pathMatch: "full", component: SpaceComponent },
         ]), ],
     declarations: [ SpaceComponent ],
-    providers: [ RendererService, SimulationService, MarkdownService ]
+    providers: [ RendererService, SimulationService, WebglWorldService, MarkdownService, CSSRendererService ]
 })
 export class SpaceModule {
 }

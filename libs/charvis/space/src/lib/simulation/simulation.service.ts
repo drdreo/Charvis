@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Body, Box, Plane, PointToPointConstraint, Vec3, World, Quaternion } from 'cannon-es';
+import { Body, Box, Plane, PointToPointConstraint, Vec3, World } from 'cannon-es';
 
 const REPULSIVE_FORCE = 0.01;
 const CANNON_SIZE_FACTOR = 0.5; // physics models seems to be bigger
