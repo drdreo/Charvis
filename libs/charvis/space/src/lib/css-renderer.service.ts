@@ -144,6 +144,13 @@ export class CSSRendererService {
         "Uuo", "Ununoctium", "(294)", 18, 7
     ];
 
+    private graphData = [
+        { id: 1, name: 'ACG' },
+        { id: 2, name: 'ADs', parent: 1 },
+        { id: 3, name: 'Preview', parent: 1 },
+        { id: 4, name: 'AC', parent: 2 },
+    ];
+
     private camera: THREE.PerspectiveCamera;
     private scene: THREE.Scene;
     private renderer: CSS3DRenderer;
@@ -156,6 +163,11 @@ export class CSSRendererService {
         helix: [] as Object3D[],
         grid: [] as Object3D[]
     };
+
+    private graphTargets = {
+        init: [] as Object3D[],
+        base: [] as Object3D[],
+    }
 
     private options: CSSRendererOptions;
     private containerSize: { width: number, height: number };
@@ -183,7 +195,9 @@ export class CSSRendererService {
 
         this.initControls();
 
-        this.transform(this.targets.table, 2000);
+        // moves random perodic elements to table layout
+        // this.transform((this.targets.base, this.targets.table, 2000);
+        this.transform(this.graphTargets.init, this.graphTargets.base, 2000);
 
         this.animate();
 
@@ -237,22 +251,24 @@ export class CSSRendererService {
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.addEventListener('change', () => {
-            console.groupCollapsed('Camera')
-            console.log('Position:', this.camera.position);
-            console.log('Rotation:', this.camera.rotation);
-            console.log('Quaternion:', this.camera.quaternion);
-            console.groupEnd();
+            // console.groupCollapsed('Camera')
+            // console.log('Position:', this.camera.position);
+            // console.log('Rotation:', this.camera.rotation);
+            // console.log('Quaternion:', this.camera.quaternion);
+            // console.groupEnd();
             this.render();
         });
     }
 
     private initObjects() {
-        this.simpleObjectsLayout();
-        this.generateGeometricLayouts();
+        // this.simpleObjectsLayout();
+        // this.generateGeometricLayouts();
+
+        this.initGraphObjects();
 
         // testing markdown
-        const markdownObject = this.markdown.html;
-        this.addHTML(markdownObject);
+        // const markdownObject = this.markdown.html;
+        // this.addHTML(markdownObject);
     }
 
     private simpleObjectsLayout() {
@@ -265,6 +281,24 @@ export class CSSRendererService {
             this.scene.add(object);
             this.targets.base.push(object);
             this.tableLayout(this.table, i);
+        }
+    }
+
+    private initGraphObjects(): void {
+        for (const [index, data] of this.graphData.entries()) {
+            const initObject = new CSS3DObject(this.graphToHTMLElement(data, this.graphTargets.init, index));
+            initObject.position.x = Math.random() * 4000 - 2000;
+            initObject.position.y = Math.random() * 4000 - 2000;
+            initObject.position.z = Math.random() * 4000 - 2000;
+
+            this.scene.add(initObject);
+            this.graphTargets.init.push(initObject);
+
+            const baseTarget = new Object3D();
+            baseTarget.position.x = (index * 140 * scaleFactor);
+            this.graphTargets.base.push(baseTarget);
+
+            console.log(initObject,baseTarget);
         }
     }
 
@@ -288,7 +322,27 @@ export class CSSRendererService {
         details.innerHTML = table[i + 1] + '<br>' + table[i + 2];
         element.appendChild(details);
 
-        element.addEventListener('pointerdown', () => this.elementClickHandler(i, element), false);
+        element.addEventListener('pointerdown', () => this.elementClickHandler(this.targets.base[i / 5], element), false);
+
+        return element;
+    }
+
+    private graphToHTMLElement(data: any, objectSource: Object3D[], index: number) {
+        const element = document.createElement('div');
+        element.className = 'element';
+        element.style.backgroundColor = 'rgba(0,127,127,' + (Math.random() * 0.5 + 0.25) + ')';
+
+        const number = document.createElement('div');
+        number.className = 'number';
+        number.innerHTML = data.parent;
+        element.appendChild(number);
+
+        const symbol = document.createElement('div');
+        symbol.className = 'symbol';
+        symbol.textContent = data.name;
+        element.appendChild(symbol);
+
+        element.addEventListener('pointerdown', () => this.elementClickHandler(objectSource[index], element), false);
 
         return element;
     }
@@ -303,15 +357,14 @@ export class CSSRendererService {
     private addBtnClickListener(target: Object3D[], elementId: string) {
         const button = document.getElementById(elementId)!;
         button.addEventListener('click', () => {
-            this.transform(target, 2000);
+            this.transform(this.targets.base, target, 2000);
         }, false);
     }
 
-    private elementClickHandler(i: number, element: HTMLElement) {
+    private elementClickHandler(source: Object3D, element: HTMLElement) {
         console.log('elementClickHandler');
         element.classList.add('selected');
 
-        const source = this.targets.base[i / 5];
 
         const resetDuration = 750;
         const rotateDuration = Math.random() * 2000 + resetDuration;
@@ -319,7 +372,8 @@ export class CSSRendererService {
         const totalDuration = 2 * (rotateDuration + moveDuration);
 
         // reset all current tweens and positions
-        this.transform(this.targets.table, resetDuration);
+        this.transform(this.targets.base, this.targets.table, resetDuration);
+        this.transform(this.graphTargets.init, this.graphTargets.base, resetDuration);
 
         const destination = new Vector3();
         this.camera.getWorldDirection(destination);  // store camera direction vector
@@ -402,22 +456,21 @@ export class CSSRendererService {
         this.targets.grid.push(object);
     }
 
-    private transform(target: Object3D[], duration: number) {
+    private transform(sources: Object3D[], target: Object3D[], duration: number) {
 
         TWEEN.removeAll();
 
-        for (let i = 0; i < this.targets.base.length; i++) {
-            let object = this.targets.base[i];
+        for (let i = 0; i < sources.length; i++) {
+            let source = sources[i];
             let targetObject = target[i];
-            this.transformObjectPosition(object, targetObject, duration);
-            this.transformObjectRotation(object, targetObject, duration);
+            this.transformObjectPosition(source, targetObject, duration);
+            this.transformObjectRotation(source, targetObject, duration);
         }
 
         new TWEEN.Tween(this)
             .to({}, duration * 2)
             .onUpdate(() => this.render())
             .start();
-
     }
 
     private transformObjectPosition(object: Object3D, targetObject: Object3D, duration: number) {
