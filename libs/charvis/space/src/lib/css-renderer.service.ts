@@ -145,10 +145,10 @@ export class CSSRendererService {
     ];
 
     private graphData = [
-        { id: 1, name: 'ACG' },
-        { id: 2, name: 'ADs', parent: 1 },
-        { id: 3, name: 'Preview', parent: 1 },
-        { id: 4, name: 'AC', parent: 2 },
+        { id: 1, value: 'ACG' },
+        { id: 2, value: 'ADs', parent: 1 },
+        { id: 3, value: 'Preview', parent: 1 },
+        { id: 4, value: 'AC', parent: 2 },
     ];
 
     private camera: THREE.PerspectiveCamera;
@@ -339,7 +339,7 @@ export class CSSRendererService {
 
         const symbol = document.createElement('div');
         symbol.className = 'symbol';
-        symbol.textContent = data.name;
+        symbol.textContent = data.value;
         element.appendChild(symbol);
 
         element.addEventListener('pointerdown', () => this.elementClickHandler(objectSource[index], element), false);
