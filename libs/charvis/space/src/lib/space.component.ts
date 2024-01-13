@@ -1,90 +1,84 @@
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    ViewChild,
-    ViewEncapsulation
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  ViewChild,
+  ViewEncapsulation,
 } from "@angular/core";
 import { CSSRendererService } from "./css-renderer.service";
 import { DebugService } from "./debug.service";
 import { WebglWorldService } from "./simulation/webgl-world.service";
 
-
 // https://github.com/pmndrs/drei
 
-
 @Component({
-    selector: "charvis-space",
-    templateUrl: "./space.component.html",
-    styleUrls: [ "./space.component.scss" ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None // because JS created elements dont work otherwise, todo: refactor to create in template instead
+  selector: "charvis-space",
+  templateUrl: "./space.component.html",
+  styleUrls: ["./space.component.scss"],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None, // because JS created elements dont work otherwise, todo: refactor to create in template instead
 })
 export class SpaceComponent implements AfterViewInit {
+  @ViewChild("spaceCanvas") private canvasRef: ElementRef;
+  @ViewChild("spaceContainer") private spaceContainerRef: ElementRef;
 
+  constructor(
+    private debugService: DebugService,
+    private webglWorldService: WebglWorldService,
+    private cssRenderer: CSSRendererService,
+  ) {}
 
-    @ViewChild('spaceCanvas') private canvasRef: ElementRef;
-    @ViewChild('spaceContainer') private spaceContainerRef: ElementRef;
+  private get canvas(): HTMLCanvasElement {
+    return this.canvasRef.nativeElement;
+  }
 
+  private get container(): HTMLElement {
+    return this.spaceContainerRef.nativeElement;
+  }
 
-    constructor(
-        private debugService: DebugService,
-        private webglWorldService: WebglWorldService,
-        private cssRenderer: CSSRendererService) {
+  ngAfterViewInit() {
+    this.startWebGLRendering();
+    // this.startCSSRendering();
 
-    }
+    this.startAnimationLoop();
 
-    private get canvas(): HTMLCanvasElement {
-        return this.canvasRef.nativeElement;
-    }
+    this.debugService.enable();
+  }
 
-    private get container(): HTMLElement {
-        return this.spaceContainerRef.nativeElement;
-    }
+  private startAnimationLoop() {
+    const component: SpaceComponent = this;
+    (function render() {
+      component.simulationLoop(component.webglWorldService);
 
-    ngAfterViewInit() {
-        this.startWebGLRendering();
-        // this.startCSSRendering();
+      component.debugUpdate(component.debugService);
+      requestAnimationFrame(render);
 
-        this.startAnimationLoop();
+      // component.cssLoop(component.cssRenderer);
+    })();
+  }
 
-        this.debugService.enable();
-    }
+  private startWebGLRendering() {
+    this.webglWorldService.startWEBGlRendering(this.canvas);
+  }
 
-    private startAnimationLoop() {
-        const component: SpaceComponent = this;
-        (function render() {
-            component.simulationLoop(component.webglWorldService);
+  private startCSSRendering() {
+    this.cssRenderer.init({
+      element: this.container,
+      width: this.container.clientWidth,
+      height: this.container.clientHeight,
+    });
+  }
 
-            component.debugUpdate(component.debugService);
-            requestAnimationFrame(render);
+  private simulationLoop(worldService: WebglWorldService) {
+    worldService.loop();
+  }
 
-            // component.cssLoop(component.cssRenderer);
-        }());
-    }
+  private cssLoop(cssRenderer: CSSRendererService) {
+    cssRenderer.loop();
+  }
 
-    private startWebGLRendering() {
-        this.webglWorldService.startWEBGlRendering(this.canvas);
-    }
-
-    private startCSSRendering() {
-        this.cssRenderer.init({
-            element: this.container,
-            width: this.container.clientWidth,
-            height: this.container.clientHeight
-        });
-    }
-
-    private simulationLoop(worldService: WebglWorldService) {
-        worldService.loop();
-    }
-
-    private cssLoop(cssRenderer: CSSRendererService) {
-        cssRenderer.loop();
-    }
-
-    private debugUpdate(debugService: DebugService) {
-        debugService.update();
-    }
+  private debugUpdate(debugService: DebugService) {
+    debugService.update();
+  }
 }

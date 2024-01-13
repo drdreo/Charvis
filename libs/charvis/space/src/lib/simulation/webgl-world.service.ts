@@ -7,70 +7,80 @@ import { SimulationService } from "./simulation.service";
 
 @Injectable()
 export class WebglWorldService {
+  private cannonDebugger: any;
 
-    private cannonDebugger: any;
+  constructor(
+    private renderer: RendererService,
+    private simulation: SimulationService,
+  ) {}
 
-    constructor(private renderer: RendererService, private simulation: SimulationService) {
+  loop(): void {
+    this.simulation.step(1 / 60); // Advance the simulation by 1/60th of a second
+    this.cannonDebugger.update();
+
+    const bodies = this.simulation.getBodies();
+    const meshes = this.renderer.getObjectsWithBody();
+    // Update the position and orientation of the meshes to match the bodies in the simulation
+    for (const mesh of meshes) {
+      const bodyId = mesh.bodyId;
+      if (!bodyId) {
+        console.warn("Mesh has no body");
+        continue;
+      }
+
+      const body = bodies[bodyId];
+      if (!body) {
+        console.warn("Could not find body for mesh: ", mesh.id);
+        continue;
+      }
+      mesh.position.copy(convertVecToVector(body.position));
+      mesh.quaternion.copy(body.quaternion as unknown as Quaternion);
     }
+    // component.renderer.lockCube();
+    this.renderer.render();
+  }
 
-    loop(): void {
-        this.simulation.step(1 / 60); // Advance the simulation by 1/60th of a second
-        this.cannonDebugger.update();
+  startWEBGlRendering(canvas: HTMLCanvasElement): void {
+    this.renderer.init({
+      canvas: canvas,
+      width: canvas.clientWidth,
+      height: canvas.clientHeight,
+    });
+    // this.simulation.init(); // creates dummy bodies
 
-        const bodies = this.simulation.getBodies();
-        const meshes = this.renderer.getObjectsWithBody();
-        // Update the position and orientation of the meshes to match the bodies in the simulation
-        for (const mesh of meshes) {
-            const bodyId = mesh.bodyId;
-            if (!bodyId) {
-                console.warn('Mesh has no body');
-                continue;
-            }
+    this.renderer.addTestDocument();
+    // const bodies = this.simulation.getBodies();
+    // bodies.forEach((body) => this.renderer.addCube(body.id));
 
-            const body = bodies[bodyId];
-            if (!body) {
-                console.warn('Could not find body for mesh: ', mesh.id);
-                continue;
-            }
-            mesh.position.copy(convertVecToVector(body.position));
-            mesh.quaternion.copy(body.quaternion as unknown as Quaternion);
+    this.cannonDebugger = CannonDebugger(
+      this.renderer.getScene(),
+      this.simulation.getWorld(),
+      {},
+    );
 
-        }
-        // component.renderer.lockCube();
-        this.renderer.render();
-    }
+    window.addEventListener(
+      "resize",
+      () => {
+        this.renderer.onCanvasResize(canvas.clientWidth, canvas.clientHeight);
+      },
+      false,
+    );
 
-    startWEBGlRendering(canvas: HTMLCanvasElement): void {
-        this.renderer.init({ canvas: canvas, width: canvas.clientWidth, height: canvas.clientHeight });
-        // this.simulation.init(); // creates dummy bodies
+    // this.addResizeObserver(canvas: HTMLCanvasElement);
+  }
 
-        this.renderer.addTestDocument();
-        // const bodies = this.simulation.getBodies();
-        // bodies.forEach((body) => this.renderer.addCube(body.id));
+  private addResizeObserver(canvas: HTMLCanvasElement): void {
+    const observer = new ResizeObserver((entries) => {
+      entries.forEach((entry) => {
+        console.log("width", entry.contentRect.width);
+        console.log("height", entry.contentRect.height);
+      });
+    });
 
-        this.cannonDebugger = CannonDebugger(this.renderer.getScene(), this.simulation.getWorld(), {});
-
-        window.addEventListener('resize', () => {
-            this.renderer.onCanvasResize(canvas.clientWidth, canvas.clientHeight);
-        }, false);
-
-
-        // this.addResizeObserver(canvas: HTMLCanvasElement);
-    }
-
-    private addResizeObserver(canvas: HTMLCanvasElement): void {
-        const observer = new ResizeObserver(entries => {
-            entries.forEach(entry => {
-                console.log("width", entry.contentRect.width);
-                console.log("height", entry.contentRect.height);
-            });
-        });
-
-        observer.observe(canvas);
-    }
+    observer.observe(canvas);
+  }
 }
 
-
 function convertVecToVector(vec: Vec3) {
-    return new Vector3(vec.x, vec.y, vec.z);
+  return new Vector3(vec.x, vec.y, vec.z);
 }
