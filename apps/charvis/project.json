@@ -59,10 +59,10 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "charvis:build:production"
+          "buildTarget": "charvis:build:production"
         },
         "development": {
-          "browserTarget": "charvis:build:development"
+          "buildTarget": "charvis:build:development"
         }
       },
       "defaultConfiguration": "development",
@@ -73,24 +73,17 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "charvis:build"
+        "buildTarget": "charvis:build"
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": [
-          "apps/charvis/src/**/*.ts",
-          "apps/charvis/src/**/*.html"
-        ]
-      }
+      "executor": "@nx/eslint:lint"
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/apps/charvis"],
       "options": {
-        "jestConfig": "apps/charvis/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "apps/charvis/jest.config.ts"
       }
     }
   },

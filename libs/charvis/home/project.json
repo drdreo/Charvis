@@ -6,21 +6,14 @@
   "prefix": "charvis",
   "targets": {
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/libs/charvis/home"],
       "options": {
-        "jestConfig": "libs/charvis/home/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "libs/charvis/home/jest.config.ts"
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": [
-          "libs/charvis/home/**/*.ts",
-          "libs/charvis/home/**/*.html"
-        ]
-      }
+      "executor": "@nx/eslint:lint"
     }
   },
   "tags": ["scope:client type:feature"]
