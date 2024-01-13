@@ -17,11 +17,11 @@
     "paths": {
       "@charvis/api-interfaces": ["libs/api-interfaces/src/index.ts"],
       "@charvis/api/socket": ["libs/api/socket/src/index.ts"],
-      "@charvis/space": ["libs/charvis/space/src/index.ts"],
       "@charvis/data-access": ["libs/charvis/data-access/src/index.ts"],
       "@charvis/domain": ["libs/shared/domain/src/index.ts"],
       "@charvis/domain/*": ["libs/shared/domain/src/lib/*"],
       "@charvis/home": ["libs/charvis/home/src/index.ts"],
+      "@charvis/space": ["libs/charvis/space/src/index.ts"],
       "@charvis/ui": ["libs/charvis/ui/src/index.ts"],
       "@charvis/utils": ["libs/shared/utils/src/index.ts"]
     }

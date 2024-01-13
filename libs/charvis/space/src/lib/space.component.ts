@@ -7,6 +7,7 @@ import {
     ViewEncapsulation
 } from "@angular/core";
 import { CSSRendererService } from "./css-renderer.service";
+import { DebugService } from "./debug.service";
 import { WebglWorldService } from "./simulation/webgl-world.service";
 
 
@@ -27,7 +28,10 @@ export class SpaceComponent implements AfterViewInit {
     @ViewChild('spaceContainer') private spaceContainerRef: ElementRef;
 
 
-    constructor(private webglWorldService: WebglWorldService, private cssRenderer: CSSRendererService) {
+    constructor(
+        private debugService: DebugService,
+        private webglWorldService: WebglWorldService,
+        private cssRenderer: CSSRendererService) {
 
     }
 
@@ -40,19 +44,23 @@ export class SpaceComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        // this.startWebGLRendering();
-        this.startCSSRendering();
+        this.startWebGLRendering();
+        // this.startCSSRendering();
 
         this.startAnimationLoop();
+
+        this.debugService.enable();
     }
 
     private startAnimationLoop() {
         const component: SpaceComponent = this;
         (function render() {
-            // component.simulationLoop(component.webglWorldService);
+            component.simulationLoop(component.webglWorldService);
+
+            component.debugUpdate(component.debugService);
             requestAnimationFrame(render);
 
-            component.cssLoop(component.cssRenderer);
+            // component.cssLoop(component.cssRenderer);
         }());
     }
 
@@ -74,5 +82,9 @@ export class SpaceComponent implements AfterViewInit {
 
     private cssLoop(cssRenderer: CSSRendererService) {
         cssRenderer.loop();
+    }
+
+    private debugUpdate(debugService: DebugService) {
+        debugService.update();
     }
 }

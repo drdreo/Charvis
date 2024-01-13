@@ -42,10 +42,11 @@ export class WebglWorldService {
 
     startWEBGlRendering(canvas: HTMLCanvasElement): void {
         this.renderer.init({ canvas: canvas, width: canvas.clientWidth, height: canvas.clientHeight });
-        this.simulation.init(); // creates dummy bodies
+        // this.simulation.init(); // creates dummy bodies
 
-        const bodies = this.simulation.getBodies();
-        bodies.forEach((body) => this.renderer.addCube(body.id));
+        this.renderer.addTestDocument();
+        // const bodies = this.simulation.getBodies();
+        // bodies.forEach((body) => this.renderer.addCube(body.id));
 
         this.cannonDebugger = CannonDebugger(this.renderer.getScene(), this.simulation.getWorld(), {});
 

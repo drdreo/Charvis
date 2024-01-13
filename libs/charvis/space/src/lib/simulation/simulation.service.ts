@@ -48,7 +48,7 @@ export class SimulationService {
             // Create a RigidBody object for the shape
             const body = new Body({
                 mass: 10000000, // Set the mass of the body
-                shape: new Box(new Vec3(1 * CANNON_SIZE_FACTOR, 1 * CANNON_SIZE_FACTOR, 1 * CANNON_SIZE_FACTOR)), // Set the shape of the body to a sphere with a radius of 1
+                shape: new Box(new Vec3(CANNON_SIZE_FACTOR, CANNON_SIZE_FACTOR, CANNON_SIZE_FACTOR)), // Set the shape of the body to a sphere with a radius of 1
                 position: new Vec3(i * 1.1, i * 1.1 + 1, 3),
             });
 

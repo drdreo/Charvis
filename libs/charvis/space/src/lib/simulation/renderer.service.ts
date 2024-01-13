@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
-import { Object3D } from "three";
 import * as THREE from "three";
+import { Object3D } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { BaseEvent, Event, EventDispatcher } from "three/src/core/EventDispatcher";
 
+import { simpleFragmentShader, vertexShader } from "./shaders/fragment.shader";
 
 declare module "three" {
     interface Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
@@ -70,6 +71,7 @@ export class RendererService {
     }
 
     addObject(object: Object3D): void {
+        console.debug('Adding object to scene: ', object);
         this.scene.add(object);
     }
 
@@ -140,18 +142,24 @@ export class RendererService {
         // this.camera.up.set(0,1,0) // this is default
     }
 
-    /**
-     * Start the rendering loop
-     *
-     * @private
-     * @memberof CubeComponent
-     */
-    private createRenderer(options: RendererOptions) {
-        this.renderer = new THREE.WebGLRenderer({ canvas: options.canvas });
-        this.renderer.setPixelRatio(devicePixelRatio);
-        this.renderer.setSize(options.width, options.height);
+    addTestDocument(): void {
+        const height = 8;
+        const width = 3;
+        const geometry = new THREE.BoxGeometry(width, height, 0.2);
+        // const material = new THREE.MeshBasicMaterial({
+        //     color: 0xffffff,
+        //     map: this.getHtmlTexture(),
+        // });
 
-        this.onCanvasResize(options.width, options.height);
+
+        const material = this.getModernShaderMaterial();
+        // center on origin
+        const doc = new THREE.Mesh(geometry, material);
+        doc.position.setX(width / 2);
+        doc.position.setY(height / +2);
+
+        this.addObject(doc);
+
     }
 
     private createControls() {
@@ -173,5 +181,62 @@ export class RendererService {
         }
 
         return group;
+    }
+
+    /**
+     * Start the rendering loop
+     *
+     * @private
+     * @memberof CubeComponent
+     */
+    private createRenderer(options: RendererOptions) {
+        this.renderer = new THREE.WebGLRenderer({ canvas: options.canvas });
+        this.renderer.setPixelRatio(devicePixelRatio);
+        this.renderer.setSize(options.width, options.height);
+
+        this.renderer.setClearColor(0x000000, 0);
+        this.renderer.sortObjects = false;
+        this.renderer.autoClear = false;
+
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.physicallyCorrectLights = true;
+
+
+        this.onCanvasResize(options.width, options.height);
+    }
+
+    private getHtmlTexture(): THREE.CanvasTexture {
+        const canvas = document.createElement('canvas');
+        canvas.width = 256;
+        canvas.height = 256;
+
+        const context = canvas.getContext('2d')!;
+        context.fillStyle = 'red';
+        context.fillRect(0, 0, 256, 256);
+        context.fillStyle = 'white';
+        context.font = '48px serif';
+        context.fillText('Hello ThreeJS!', 20, 128);
+
+        return new THREE.CanvasTexture(canvas);
+    }
+
+
+    private getModernShaderMaterial() {
+        const uniforms = {
+            topColor: { value: new THREE.Color(0xff77ff) },
+            bottomColor: { value: new THREE.Color(0x0077ff) },
+            uIntensity: { value: 1.0 },
+            uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+        };
+
+        return new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: vertexShader,
+            fragmentShader: simpleFragmentShader,
+            wireframe: false,
+            glslVersion: THREE.GLSL3,
+            transparent: true,
+        });
     }
 }
