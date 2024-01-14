@@ -23,7 +23,8 @@
             "@charvis/home": ["libs/charvis/home/src/index.ts"],
             "@charvis/space": ["libs/charvis/space/src/index.ts"],
             "@charvis/ui": ["libs/charvis/ui/src/index.ts"],
-            "@charvis/utils": ["libs/shared/utils/src/index.ts"]
+            "@charvis/utils": ["libs/shared/utils/src/index.ts"],
+            "tts": ["libs/charvis/tts/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]

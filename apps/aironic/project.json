@@ -1,0 +1,29 @@
+{
+    "name": "aironic",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/api/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "go build -o=../../dist/apps/aironic/ ./src/main.go",
+                "cwd": "apps/aironic"
+            }
+        },
+        "test": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "go test ./src",
+                "cwd": "apps/aironic"
+            }
+        },
+        "serve": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "go run ./src/main.go",
+                "cwd": "apps/aironic"
+            }
+        }
+    }
+}

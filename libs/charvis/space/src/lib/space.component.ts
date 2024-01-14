@@ -9,6 +9,7 @@ import {
 import { CSSRendererService } from "./css-renderer.service";
 import { DebugService } from "./debug.service";
 import { WebglWorldService } from "./simulation/webgl-world.service";
+import { TtsComponent } from "tts";
 
 // https://github.com/pmndrs/drei
 
@@ -19,6 +20,7 @@ import { WebglWorldService } from "./simulation/webgl-world.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     standalone: true,
+    imports: [TtsComponent],
 })
 export class SpaceComponent implements AfterViewInit {
     @ViewChild("spaceCanvas") private canvasRef: ElementRef;
