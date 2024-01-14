@@ -25,7 +25,7 @@ interface RendererOptions {
 /**
  * The renderer service is responsible for everything visual. Creating meshes, material, lighting etc.
  */
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class RendererService {
     private scene: THREE.Scene;
     private renderer: THREE.WebGLRenderer;

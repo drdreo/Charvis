@@ -13,7 +13,7 @@ const CANNON_SIZE_FACTOR = 0.5; // physics models seems to be bigger
 /**
  * The simulation service is responsible for everything physic related. Calculating velocity, updating position etc.
  */
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class SimulationService {
     private world = new World();
 

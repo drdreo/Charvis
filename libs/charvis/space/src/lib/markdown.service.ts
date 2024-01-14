@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import * as showdown from "showdown";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class MarkdownService {
     text = `
 
@@ -177,11 +177,10 @@ see [how to change output](https://github.com/markdown-it/markdown-it-emoji#chan
     html;
 
     constructor() {
-        this.converter.setFlavor('github');
-        const div = document.createElement('div');
-        div.style.backgroundColor = '#daa520AA'
+        this.converter.setFlavor("github");
+        const div = document.createElement("div");
+        div.style.backgroundColor = "#daa520AA";
         div.innerHTML = this.converter.makeHtml(this.text);
         this.html = div;
-
     }
 }
