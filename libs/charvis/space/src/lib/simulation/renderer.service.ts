@@ -90,7 +90,7 @@ export class RendererService {
         return this.scene.children;
     }
 
-    public render() {
+    render() {
         this.renderer.render(this.scene, this.camera);
     }
 
@@ -99,6 +99,24 @@ export class RendererService {
         this.camera.aspect = this.aspectRatio;
         this.camera.updateProjectionMatrix(); // maybe not always needed
         this.renderer.setSize(width, height);
+    }
+
+    addTestDocument(): void {
+        const height = 8;
+        const width = 3;
+        const geometry = new THREE.BoxGeometry(width, height, 1);
+        // const material = new THREE.MeshBasicMaterial({
+        //     color: 0xffffff,
+        //     map: this.getHtmlTexture(),
+        // });
+
+        const material = this.getModernShaderMaterial();
+        // center on origin
+        const doc = new THREE.Mesh(geometry, material);
+        doc.position.setX(width / 2);
+        doc.position.setY(height / +2);
+
+        this.addObject(doc);
     }
 
     private createFloorGrid() {
@@ -148,24 +166,6 @@ export class RendererService {
         );
 
         // this.camera.up.set(0,1,0) // this is default
-    }
-
-    addTestDocument(): void {
-        const height = 8;
-        const width = 3;
-        const geometry = new THREE.BoxGeometry(width, height, 0.2);
-        // const material = new THREE.MeshBasicMaterial({
-        //     color: 0xffffff,
-        //     map: this.getHtmlTexture(),
-        // });
-
-        const material = this.getModernShaderMaterial();
-        // center on origin
-        const doc = new THREE.Mesh(geometry, material);
-        doc.position.setX(width / 2);
-        doc.position.setY(height / +2);
-
-        this.addObject(doc);
     }
 
     private createControls() {

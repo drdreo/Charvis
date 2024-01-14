@@ -5,7 +5,7 @@ import { Quaternion, Vector3 } from "three";
 import { RendererService } from "./renderer.service";
 import { SimulationService } from "./simulation.service";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class WebglWorldService {
     private cannonDebugger: any;
 

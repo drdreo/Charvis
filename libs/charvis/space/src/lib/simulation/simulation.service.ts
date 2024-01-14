@@ -16,10 +16,9 @@ const CANNON_SIZE_FACTOR = 0.5; // physics models seems to be bigger
 @Injectable({ providedIn: "root" })
 export class SimulationService {
     private world = new World();
-
     private floor: Body;
 
-    public step(step: number) {
+    step(step: number) {
         this.world.fixedStep();
     }
 

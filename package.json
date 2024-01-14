@@ -3,10 +3,6 @@
     "version": "0.0.2",
     "license": "MIT",
     "scripts": {
-        "ng": "nx",
-        "start": "nx serve",
-        "build": "nx build",
-        "test": "nx test",
         "migration:prep": "nx migrate latest",
         "migration:run": "nx migrate --run-migrations"
     },
