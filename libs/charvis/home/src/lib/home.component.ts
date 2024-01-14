@@ -11,7 +11,7 @@ import { roomNameValidator } from "@charvis/utils";
 import { HomeInfo } from "@charvis/api-interfaces";
 import { SocketService } from "@charvis/data-access";
 import { takeUntil, Subject, Observable } from "rxjs";
-import { NgIf, NgFor, AsyncPipe } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
     selector: "charvis-home",
@@ -19,7 +19,7 @@ import { NgIf, NgFor, AsyncPipe } from "@angular/common";
     styleUrls: ["./home.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [NgIf, NgFor, ReactiveFormsModule, AsyncPipe],
+    imports: [ReactiveFormsModule, AsyncPipe],
 })
 export class HomeComponent implements OnDestroy {
     homeInfo$: Observable<HomeInfo>;
