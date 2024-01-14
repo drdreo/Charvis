@@ -4,32 +4,31 @@ import {
     Component,
     ElementRef,
     ViewChild,
-    ViewEncapsulation
+    ViewEncapsulation,
 } from "@angular/core";
 import { CSSRendererService } from "./css-renderer.service";
+import { DebugService } from "./debug.service";
 import { WebglWorldService } from "./simulation/webgl-world.service";
 
-
 // https://github.com/pmndrs/drei
-
 
 @Component({
     selector: "charvis-space",
     templateUrl: "./space.component.html",
-    styleUrls: [ "./space.component.scss" ],
+    styleUrls: ["./space.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None // because JS created elements dont work otherwise, todo: refactor to create in template instead
+    encapsulation: ViewEncapsulation.None,
+    standalone: true,
 })
 export class SpaceComponent implements AfterViewInit {
+    @ViewChild("spaceCanvas") private canvasRef: ElementRef;
+    @ViewChild("spaceContainer") private spaceContainerRef: ElementRef;
 
-
-    @ViewChild('spaceCanvas') private canvasRef: ElementRef;
-    @ViewChild('spaceContainer') private spaceContainerRef: ElementRef;
-
-
-    constructor(private webglWorldService: WebglWorldService, private cssRenderer: CSSRendererService) {
-
-    }
+    constructor(
+        private debugService: DebugService,
+        private webglWorldService: WebglWorldService,
+        private cssRenderer: CSSRendererService,
+    ) {}
 
     private get canvas(): HTMLCanvasElement {
         return this.canvasRef.nativeElement;
@@ -40,20 +39,24 @@ export class SpaceComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        // this.startWebGLRendering();
-        this.startCSSRendering();
+        this.startWebGLRendering();
+        // this.startCSSRendering();
 
         this.startAnimationLoop();
+
+        this.debugService.enable();
     }
 
     private startAnimationLoop() {
         const component: SpaceComponent = this;
         (function render() {
-            // component.simulationLoop(component.webglWorldService);
+            component.simulationLoop(component.webglWorldService);
+
+            component.debugUpdate(component.debugService);
             requestAnimationFrame(render);
 
-            component.cssLoop(component.cssRenderer);
-        }());
+            // component.cssLoop(component.cssRenderer);
+        })();
     }
 
     private startWebGLRendering() {
@@ -64,7 +67,7 @@ export class SpaceComponent implements AfterViewInit {
         this.cssRenderer.init({
             element: this.container,
             width: this.container.clientWidth,
-            height: this.container.clientHeight
+            height: this.container.clientHeight,
         });
     }
 
@@ -74,5 +77,9 @@ export class SpaceComponent implements AfterViewInit {
 
     private cssLoop(cssRenderer: CSSRendererService) {
         cssRenderer.loop();
+    }
+
+    private debugUpdate(debugService: DebugService) {
+        debugService.update();
     }
 }

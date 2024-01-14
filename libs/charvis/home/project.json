@@ -1,27 +1,20 @@
 {
-  "name": "charvis-home",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
-  "sourceRoot": "libs/charvis/home/src",
-  "prefix": "charvis",
-  "targets": {
-    "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/charvis/home"],
-      "options": {
-        "jestConfig": "libs/charvis/home/jest.config.ts",
-        "passWithNoTests": true
-      }
+    "name": "charvis-home",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/charvis/home/src",
+    "prefix": "charvis",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/charvis/home"],
+            "options": {
+                "jestConfig": "libs/charvis/home/jest.config.ts"
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        }
     },
-    "lint": {
-      "executor": "@nrwl/linter:eslint",
-      "options": {
-        "lintFilePatterns": [
-          "libs/charvis/home/**/*.ts",
-          "libs/charvis/home/**/*.html"
-        ]
-      }
-    }
-  },
-  "tags": ["scope:client type:feature"]
+    "tags": ["scope:client type:feature"]
 }
