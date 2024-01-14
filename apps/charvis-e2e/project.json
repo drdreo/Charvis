@@ -1,27 +1,27 @@
 {
-  "name": "charvis-e2e",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/charvis-e2e/src",
-  "projectType": "application",
-  "targets": {
-    "e2e": {
-      "executor": "@nx/cypress:cypress",
-      "options": {
-        "cypressConfig": "apps/charvis-e2e/cypress.json",
-        "devServerTarget": "charvis:serve:development",
-        "tsConfig": "apps/charvis-e2e/tsconfig.json"
-      },
-      "configurations": {
-        "production": {
-          "devServerTarget": "charvis:serve:production"
+    "name": "charvis-e2e",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/charvis-e2e/src",
+    "projectType": "application",
+    "targets": {
+        "e2e": {
+            "executor": "@nx/cypress:cypress",
+            "options": {
+                "cypressConfig": "apps/charvis-e2e/cypress.json",
+                "devServerTarget": "charvis:serve:development",
+                "tsConfig": "apps/charvis-e2e/tsconfig.json"
+            },
+            "configurations": {
+                "production": {
+                    "devServerTarget": "charvis:serve:production"
+                }
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint",
+            "outputs": ["{options.outputFile}"]
         }
-      }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"]
-    }
-  },
-  "tags": [],
-  "implicitDependencies": ["charvis"]
+    "tags": [],
+    "implicitDependencies": ["charvis"]
 }

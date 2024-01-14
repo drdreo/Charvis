@@ -5,13 +5,13 @@ import { RouterModule } from "@angular/router";
 import { HomeComponent } from "./home.component";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild([
-      { path: "", pathMatch: "full", component: HomeComponent },
-    ]),
-    ReactiveFormsModule,
-  ],
-  declarations: [HomeComponent],
+    imports: [
+        CommonModule,
+        RouterModule.forChild([
+            { path: "", pathMatch: "full", component: HomeComponent },
+        ]),
+        ReactiveFormsModule,
+        HomeComponent,
+    ],
 })
 export class HomeModule {}

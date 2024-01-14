@@ -1,20 +1,20 @@
 {
-  "name": "charvis-ui",
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "projectType": "library",
-  "sourceRoot": "libs/charvis/ui/src",
-  "prefix": "charvis",
-  "targets": {
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/libs/charvis/ui"],
-      "options": {
-        "jestConfig": "libs/charvis/ui/jest.config.ts"
-      }
+    "name": "charvis-ui",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/charvis/ui/src",
+    "prefix": "charvis",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/charvis/ui"],
+            "options": {
+                "jestConfig": "libs/charvis/ui/jest.config.ts"
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        }
     },
-    "lint": {
-      "executor": "@nx/eslint:lint"
-    }
-  },
-  "tags": ["scope:client type:ui"]
+    "tags": ["scope:client type:ui"]
 }

@@ -13,9 +13,15 @@ import { SpaceComponent } from "./space.component";
         CommonModule,
         RouterModule.forChild([
             { path: "", pathMatch: "full", component: SpaceComponent },
-        ]), ],
-    declarations: [ SpaceComponent ],
-    providers: [ RendererService, SimulationService, WebglWorldService, MarkdownService, CSSRendererService ]
+        ]),
+        SpaceComponent,
+    ],
+    providers: [
+        RendererService,
+        SimulationService,
+        WebglWorldService,
+        MarkdownService,
+        CSSRendererService,
+    ],
 })
-export class SpaceModule {
-}
+export class SpaceModule {}
