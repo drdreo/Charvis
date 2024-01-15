@@ -8,7 +8,11 @@ import {
     EventDispatcher,
 } from "three/src/core/EventDispatcher";
 
-import { simpleFragmentShader, vertexShader } from "./shaders/fragment.shader";
+import {
+    pdfShader,
+    simpleFragmentShader,
+    vertexShader,
+} from "./shaders/fragment.shader";
 
 declare module "three" {
     interface Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
@@ -117,6 +121,25 @@ export class RendererService {
         doc.position.setY(height / +2);
 
         this.addObject(doc);
+    }
+
+    addPdf(canvas: HTMLCanvasElement): void {
+        console.log("adding pdf");
+        const height = 23;
+        const width = 16;
+        const geometry = new THREE.PlaneGeometry(width, height);
+        const texture = new THREE.CanvasTexture(canvas);
+        const material = this.getPDFShaderMaterial(texture);
+
+        // Create the mesh with the geometry and material
+        const doc = new THREE.Mesh(geometry, material);
+
+        // Adjust position
+        doc.position.setX(width / 2);
+        doc.position.setY(height / +2);
+
+        // Add the mesh to your scene or object group
+        this.addObject(doc); // Assuming this.addObject adds the mesh to the scene
     }
 
     private createFloorGrid() {
@@ -246,6 +269,26 @@ export class RendererService {
             wireframe: false,
             glslVersion: THREE.GLSL3,
             transparent: true,
+        });
+    }
+
+    private getPDFShaderMaterial(texture: THREE.Texture) {
+        const uniforms = {
+            uResolution: {
+                value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+            },
+            uTexture: { value: texture },
+        };
+
+        return new THREE.ShaderMaterial({
+            uniforms: uniforms,
+            vertexShader: vertexShader,
+            fragmentShader: pdfShader,
+            wireframe: false,
+            glslVersion: THREE.GLSL3,
+            transparent: true,
+            side: THREE.DoubleSide,
+            blending: THREE.AdditiveBlending,
         });
     }
 }

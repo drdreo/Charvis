@@ -4,6 +4,7 @@ import CannonDebugger from "cannon-es-debugger";
 import { Quaternion, Vector3 } from "three";
 import { RendererService } from "./renderer.service";
 import { SimulationService } from "./simulation.service";
+import { PDFService } from "../pdf/pdf.service";
 
 @Injectable({ providedIn: "root" })
 export class WebglWorldService {
@@ -12,6 +13,7 @@ export class WebglWorldService {
     constructor(
         private renderer: RendererService,
         private simulation: SimulationService,
+        private pdfService: PDFService,
     ) {}
 
     loop(): void {
@@ -48,7 +50,17 @@ export class WebglWorldService {
         });
         // this.simulation.init(); // creates dummy bodies
 
-        this.renderer.addTestDocument();
+        // testing PDFs
+        setTimeout(() => {
+            this.pdfService
+                .loadPdf("assets/test.pdf")
+                .then((canvasElements) => {
+                    canvasElements.forEach((canvasElement) => {
+                        this.renderer.addPdf(canvasElement);
+                    });
+                });
+        }, 3000);
+        // this.renderer.addTestDocument();
         // const bodies = this.simulation.getBodies();
         // bodies.forEach((body) => this.renderer.addCube(body.id));
 
@@ -61,6 +73,8 @@ export class WebglWorldService {
         window.addEventListener(
             "resize",
             () => {
+                console.log("resize", canvas.clientWidth);
+
                 this.renderer.onCanvasResize(
                     canvas.clientWidth,
                     canvas.clientHeight,

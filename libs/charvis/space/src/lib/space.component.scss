@@ -1,12 +1,9 @@
 $scale-factor: 1;
 
-.hud {
-	position: absolute;
-	top: 0;
-}
-
 :host {
-	overflow: hidden;
+    position: relative;
+    display: block;
+    overflow: hidden;
 }
 
 .space-container {

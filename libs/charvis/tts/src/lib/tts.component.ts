@@ -19,9 +19,10 @@ export class TtsComponent {
     @ViewChild("audioPlayer") audioPlayer!: ElementRef;
 
     constructor(private ttsService: TextToSpeechService) {
-        this.ttsService.requestSpeech().subscribe((data) => {
-            this.playAudio(data);
-        });
+        // for testing
+        // this.ttsService.requestSpeech().subscribe((data) => {
+        //     this.playAudio(data);
+        // });
     }
 
     private playAudio(data: Blob) {
