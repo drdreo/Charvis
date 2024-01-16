@@ -67,3 +67,30 @@ void main() {
     }
 }
 `;
+
+export const blurFrameShader = `
+    uniform sampler2D uTexture;
+    uniform vec2 uResolution;
+    varying vec2 vUv;
+
+out vec4 fragColor;
+    // Gaussian blur function
+    vec4 gaussianBlur(sampler2D tex, vec2 uv, vec2 resolution, float radius) {
+        vec4 color = vec4(0.0);
+
+        for (float x = -radius; x <= radius; x++) {
+            for (float y = -radius; y <= radius; y++) {
+                vec2 offset = vec2(x, y) / resolution;
+                color += texture2D(tex, uv + offset);
+            }
+        }
+
+        return color / ((2.0 * radius + 1.0) * (2.0 * radius + 1.0));
+    }
+
+    void main() {
+        // Blur the frame texture with a radius of 5 pixels (adjust as needed)
+        vec4 blurredColor = gaussianBlur(uTexture, vUv, uResolution, 5.0);
+        fragColor = blurredColor;
+    }
+`;

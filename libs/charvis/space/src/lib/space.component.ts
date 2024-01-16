@@ -6,9 +6,9 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from "@angular/core";
-import { CSSRendererService } from "./css-renderer.service";
+import { CSSRendererService } from "./css-renderer/css-renderer.service";
 import { DebugService } from "./debug.service";
-import { WebglWorldService } from "./simulation/webgl-world.service";
+import { WorldService } from "./simulation/world.service";
 import { TtsComponent } from "tts";
 
 // https://github.com/pmndrs/drei
@@ -28,7 +28,7 @@ export class SpaceComponent implements AfterViewInit {
 
     constructor(
         private debugService: DebugService,
-        private webglWorldService: WebglWorldService,
+        private worldService: WorldService,
         private cssRenderer: CSSRendererService,
     ) {}
 
@@ -52,7 +52,7 @@ export class SpaceComponent implements AfterViewInit {
     private startAnimationLoop() {
         const component: SpaceComponent = this;
         (function render() {
-            component.simulationLoop(component.webglWorldService);
+            component.simulationLoop(component.worldService);
 
             component.debugUpdate(component.debugService);
             requestAnimationFrame(render);
@@ -62,7 +62,7 @@ export class SpaceComponent implements AfterViewInit {
     }
 
     private startWebGLRendering() {
-        this.webglWorldService.startWEBGlRendering(this.canvas);
+        this.worldService.init(this.canvas);
     }
 
     private startCSSRendering() {
@@ -73,7 +73,7 @@ export class SpaceComponent implements AfterViewInit {
         });
     }
 
-    private simulationLoop(worldService: WebglWorldService) {
+    private simulationLoop(worldService: WorldService) {
         worldService.loop();
     }
 

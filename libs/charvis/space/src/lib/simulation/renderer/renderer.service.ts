@@ -7,12 +7,7 @@ import {
     Event,
     EventDispatcher,
 } from "three/src/core/EventDispatcher";
-
-import {
-    pdfShader,
-    simpleFragmentShader,
-    vertexShader,
-} from "./shaders/fragment.shader";
+import { RendererObjectHelper } from "./renderer-object.helper";
 
 declare module "three" {
     interface Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
@@ -43,6 +38,7 @@ export class RendererService {
     private options: RendererOptions;
 
     private canvasSize: { width: number; height: number };
+    private objectHelper = new RendererObjectHelper();
 
     private get aspectRatio(): number {
         return this.canvasSize.width / this.canvasSize.height;
@@ -75,7 +71,7 @@ export class RendererService {
     }
 
     addCube(id?: number): void {
-        this.scene.add(this.createCube(id));
+        this.scene.add(this.objectHelper.getLineBox(1, id));
     }
 
     addObject(object: Object3D): void {
@@ -105,68 +101,28 @@ export class RendererService {
         this.renderer.setSize(width, height);
     }
 
-    addTestDocument(): void {
-        const height = 8;
-        const width = 3;
-        const geometry = new THREE.BoxGeometry(width, height, 1);
-        // const material = new THREE.MeshBasicMaterial({
-        //     color: 0xffffff,
-        //     map: this.getHtmlTexture(),
-        // });
-
-        const material = this.getModernShaderMaterial();
-        // center on origin
-        const doc = new THREE.Mesh(geometry, material);
-        doc.position.setX(width / 2);
-        doc.position.setY(height / +2);
-
-        this.addObject(doc);
+    addTestCube(): void {
+        const obj = this.objectHelper.getTestBox(5);
+        this.addObject(obj);
     }
 
-    addPdf(canvas: HTMLCanvasElement): void {
-        console.log("adding pdf");
-        const height = 23;
-        const width = 16;
-        const geometry = new THREE.PlaneGeometry(width, height);
-        const texture = new THREE.CanvasTexture(canvas);
-        const material = this.getPDFShaderMaterial(texture);
+    createPdfFrame(pdfCanvas: HTMLCanvasElement) {
+        const obj = this.objectHelper.getPdf(pdfCanvas);
+        this.addObject(obj);
+    }
 
-        // Create the mesh with the geometry and material
-        const doc = new THREE.Mesh(geometry, material);
+    addTestDocument(pdf: THREE.Mesh): void {
+        const obj = this.objectHelper.getTestDocument(pdf);
+        this.addObject(obj);
+    }
 
-        // Adjust position
-        doc.position.setX(width / 2);
-        doc.position.setY(height / +2);
-
-        // Add the mesh to your scene or object group
-        this.addObject(doc); // Assuming this.addObject adds the mesh to the scene
+    addPdf(pdfCanvas: HTMLCanvasElement) {
+        const obj = this.objectHelper.getPdf(pdfCanvas);
     }
 
     private createFloorGrid() {
-        const size = 1000;
-        const divisions = 1000;
-
-        const gridHelper = new THREE.GridHelper(size, divisions, 0x2080ff);
-        this.scene.add(gridHelper);
-    }
-
-    private createCube(bodyId?: number): any {
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const edges = new THREE.EdgesGeometry(geometry);
-
-        const line = new THREE.LineSegments(
-            edges,
-            new THREE.LineBasicMaterial({ color: 0xffff00 }),
-        );
-        line.material.depthTest = false;
-        line.material.opacity = 0.45;
-        line.material.transparent = true;
-
-        if (bodyId) {
-            line.bodyId = bodyId;
-            console.log(line.bodyId);
-        }
-        return line;
+        const grid = this.objectHelper.createFloorGrid();
+        this.scene.add(grid);
     }
 
     private createScene(options: RendererOptions) {
@@ -207,7 +163,7 @@ export class RendererService {
         const group = new THREE.Group();
 
         for (let i = 0; i < n; i++) {
-            const cube = this.createCube();
+            const cube = this.objectHelper.getLineBox(1);
             cube.position.x += i * 1.5;
             group.add(cube);
         }
@@ -235,60 +191,5 @@ export class RendererService {
         this.renderer.physicallyCorrectLights = true;
 
         this.onCanvasResize(options.width, options.height);
-    }
-
-    private getHtmlTexture(): THREE.CanvasTexture {
-        const canvas = document.createElement("canvas");
-        canvas.width = 256;
-        canvas.height = 256;
-
-        const context = canvas.getContext("2d")!;
-        context.fillStyle = "red";
-        context.fillRect(0, 0, 256, 256);
-        context.fillStyle = "white";
-        context.font = "48px serif";
-        context.fillText("Hello ThreeJS!", 20, 128);
-
-        return new THREE.CanvasTexture(canvas);
-    }
-
-    private getModernShaderMaterial() {
-        const uniforms = {
-            topColor: { value: new THREE.Color(0xff77ff) },
-            bottomColor: { value: new THREE.Color(0x0077ff) },
-            uIntensity: { value: 1.0 },
-            uResolution: {
-                value: new THREE.Vector2(window.innerWidth, window.innerHeight),
-            },
-        };
-
-        return new THREE.ShaderMaterial({
-            uniforms: uniforms,
-            vertexShader: vertexShader,
-            fragmentShader: simpleFragmentShader,
-            wireframe: false,
-            glslVersion: THREE.GLSL3,
-            transparent: true,
-        });
-    }
-
-    private getPDFShaderMaterial(texture: THREE.Texture) {
-        const uniforms = {
-            uResolution: {
-                value: new THREE.Vector2(window.innerWidth, window.innerHeight),
-            },
-            uTexture: { value: texture },
-        };
-
-        return new THREE.ShaderMaterial({
-            uniforms: uniforms,
-            vertexShader: vertexShader,
-            fragmentShader: pdfShader,
-            wireframe: false,
-            glslVersion: THREE.GLSL3,
-            transparent: true,
-            side: THREE.DoubleSide,
-            blending: THREE.AdditiveBlending,
-        });
     }
 }

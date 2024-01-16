@@ -8,12 +8,17 @@ import { imagePDF } from "./test";
 })
 export class PDFService {
     constructor() {
+        // TODO: load via package
         setTimeout(() => {
             (window as any).pdfjsLib.GlobalWorkerOptions.workerSrc =
                 "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.mjs";
         }, 2000);
     }
 
+    /**
+     * Loads a PDF file and returns an array of canvas elements representing the pages
+     * @param pdfUrl
+     */
     async loadPdf(pdfUrl: string): Promise<HTMLCanvasElement[]> {
         try {
             const pdf = await (window as any).pdfjsLib.getDocument({
